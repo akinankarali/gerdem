@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  color: #09090B;
+}
+
+/* Tailwind renk sınıflarını geçersiz kılmak için özel sınıflar */
+.text-gray-900,
+.text-gray-800,
+.text-gray-700,
+.text-gray-600 {
+  color: #09090B !important;
+}
+
+/* İkon ve diğer bileşenler için geçiş renkleri */
+.hover\:text-gray-600:hover {
+  color: #4a4a4a;
+}

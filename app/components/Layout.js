@@ -6,46 +6,33 @@ import Link from 'next/link';
 import { fetchBlogs } from '../../services/firebaseService'; // Blog verilerini çekmek için Firebase servis fonksiyonunu import et
 import { Instagram, Facebook, Twitter, ChevronDown } from 'lucide-react';
 
-export default function Layout({ children }) {
+export default function Layout({ children, blogs }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [continents, setContinents] = useState({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const blogs = await fetchBlogs();
-        const continentMap = {};
-  
-        blogs.forEach(blog => {
-          if (blog.items && Array.isArray(blog.items)) {
-            blog.items.forEach(item => {
-              const continent = item.continent;
-              const city = item.city;
-  
-              if (continent && city) {
-                if (!continentMap[continent]) {
-                  continentMap[continent] = new Set();
-                }
-                continentMap[continent].add(city);
-              }
-            });
-          }
-        });
-  
-        const formattedContinents = {};
-        for (const [continent, cities] of Object.entries(continentMap)) {
-          formattedContinents[continent] = Array.from(cities);
+    const continentMap = {};
+
+    blogs.forEach(item => {
+      const continent = item.continent;
+      const city = item.city;
+
+      if (continent && city) {
+        if (!continentMap[continent]) {
+          continentMap[continent] = new Set();
         }
-  
-        setContinents(formattedContinents);
-      } catch (error) {
-        console.error('Error fetching blog data:', error);
+        continentMap[continent].add(city);
       }
-    };
-  
-    fetchData();
-  }, []);
+    });
+
+    const formattedContinents = {};
+    for (const [continent, cities] of Object.entries(continentMap)) {
+      formattedContinents[continent] = Array.from(cities);
+    }
+
+    setContinents(formattedContinents);
+  }, [blogs]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">

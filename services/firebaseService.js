@@ -1,6 +1,5 @@
-import { db } from '../firebase'; // Firebase config dosyanız
-import { collection, getDocs } from "firebase/firestore";
-
+import { db } from '../firebase';
+import { collection, getDocs, doc, deleteDoc, updateDoc, ref, uploadBytes, getDownloadURL, getStore } from "firebase/firestore";
 
 export async function fetchAboutData() {
   const querySnapshot = await getDocs(collection(db, 'about'));
@@ -19,6 +18,16 @@ export async function fetchBlogs() {
 
 export async function fetchHomeData() {
   const querySnapshot = await getDocs(collection(db, 'home'));
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function fetchTravelRoutes() {
+  const querySnapshot = await getDocs(collection(db, 'routes'));
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function fetchComments() {
+  const querySnapshot = await getDocs(collection(db, 'comments'));
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
@@ -51,5 +60,23 @@ export async function deleteData(collectionName, docId) {
     console.log(`${collectionName} koleksiyonundaki belge başarıyla silindi.`);
   } catch (error) {
     console.error(`Veri silinirken hata oluştu: ${error}`);
+  }
+}
+
+
+export async function uploadImageAndSaveUrl(file, collectionName, docId) {
+  try {
+    const storageRef = ref(storage, `images/${file.name}`);
+    const snapshot = await uploadBytes(storageRef, file);
+
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    const docRef = doc(db, collectionName, docId);
+    await setDoc(docRef, { imageUrl: downloadURL }, { merge: true });
+
+    return downloadURL;
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    throw error;
   }
 }

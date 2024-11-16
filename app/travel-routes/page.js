@@ -1,26 +1,38 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import { ChevronDown, MapPin, Instagram, Facebook, Twitter, Search, ArrowLeft } from 'lucide-react'
-
-const travelRoutes = [
-  { id: 1, city: 'Amsterdam', country: 'Hollanda', year: 2023, image: '/assets/461564342_1078651397297056_6953756862114175817_n.jpg', description: 'Kanallar şehrinde bisiklet turları ve Van Gogh Müzesi ziyareti.' },
-  { id: 2, city: 'Kopenhag', country: 'Danimarka', year: 2024, image: '/assets/461564342_1078651397297056_6953756862114175817_n.jpg', description: 'Renkli Nyhavn limanı ve dünyaca ünlü Tivoli Bahçeleri\'nde keyifli anlar.' },
-  { id: 3, city: 'Barselona', country: 'İspanya', year: 2024, image: '/assets/461564342_1078651397297056_6953756862114175817_n.jpg', description: 'Gaudi\'nin eserlerini keşfetmek ve La Rambla\'da yürüyüş yapmak.' },
-  { id: 4, city: 'Prag', country: 'Çek Cumhuriyeti', year: 2025, image: '/assets/461564342_1078651397297056_6953756862114175817_n.jpg', description: 'Orta Çağ mimarisi ve Charles Köprüsü\'nde gün batımı manzarası.' },
-  { id: 5, city: 'Kopenhag2', country: 'Danimarka', year: 2024, image: '/assets/461564342_1078651397297056_6953756862114175817_n.jpg', description: 'Renkli Nyhavn limanı ve dünyaca ünlü Tivoli Bahçeleri\'nde keyifli anlar.' },
-
-]
+import Loader from '../components/Loader'
+import { ChevronDown, MapPin } from 'lucide-react'
+import { fetchTravelRoutes } from '../../services/firebaseService'
 
 export default function GeziRotalari() {
   const [expandedRoute, setExpandedRoute] = useState(null)
+  const [travelRoutes, setTravelRoutes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadTravelRoutes() {
+      try {
+        const routes = await fetchTravelRoutes()
+        setTravelRoutes(routes[0]?.item || [])
+      } catch (error) {
+        console.error('Error fetching travel routes:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadTravelRoutes()
+  }, [])
+
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-
-      {/* Main Content */}
       <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="max-w-4xl mx-auto">
           <motion.h1 
@@ -32,7 +44,6 @@ export default function GeziRotalari() {
             Gezi Rotalarım
           </motion.h1>
 
-          {/* SVG Konteyneri */}
           <div className="relative overflow-hidden">
             <svg className="w-full" height={travelRoutes.length * 250} viewBox={`0 0 400 ${travelRoutes.length * 250}`}>
               <path
@@ -67,7 +78,7 @@ export default function GeziRotalari() {
                 </div>
 
                 <div className={`mt-2 ${index % 2 ? 'text-right mr-16' : 'ml-16'}`}>
-                  <h2 className="text-xl font-serif text-gray-900">{route.city}, {route.country}</h2>
+                  <h2 className="text-xl font-serif text-gray-900">{route.title}</h2>
                   <p className="text-gray-600">{route.year}</p>
                 </div>
 
@@ -84,7 +95,7 @@ export default function GeziRotalari() {
                         <div className="relative mb-4" style={{ height: "32rem" }}>
                           <Image
                             src={route.image}
-                            alt={`${route.city}, ${route.country}`}
+                            alt={route.title}
                             fill
                             className="object-cover rounded-lg"
                           />

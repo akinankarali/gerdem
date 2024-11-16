@@ -1,16 +1,17 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import Loader from '../../components/Loader'
 import { ArrowLeft } from 'lucide-react'
-import { useParams } from 'next/navigation' // useParams kancasını import et
-import { fetchBlogs } from '../../../services/firebaseService' // Firebase veri çekme fonksiyonunu import et
+import { fetchBlogs, addComment, fetchCommentsByBlogId } from '../../../services/firebaseService'
 
 function generateSlug(title) {
   if (!title) {
-    return 'untitled'; // title değeri boşsa
+    return 'untitled'
   }
   return title
     .toLowerCase()
@@ -21,58 +22,69 @@ function generateSlug(title) {
     .replace(/ç/g, 'c')
     .replace(/ö/g, 'o')
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/^-+|-+$/g, '')
 }
 
 export default function BlogDetailPage() {
+  const params = useParams()
   const [blogPost, setBlogPost] = useState(null)
   const [comments, setComments] = useState([])
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const { slug } = useParams() // useParams ile slug'ı al
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const blogs = await fetchBlogs()
-        // Slug'a göre doğru blog gönderisini bul
+        const slug = params?.slug
         const foundPost = blogs[0].items.find((post) => generateSlug(post.title) === slug)
-        console.log("🚀 ~ fetchData ~ foundPost:", foundPost)
         if (foundPost) {
           setBlogPost(foundPost)
+          const blogComments = await fetchCommentsByBlogId(foundPost.id)
+          setComments(blogComments)
         }
       } catch (error) {
         console.error('Error fetching blog post:', error)
       }
     }
 
-    if (slug) {
+    if (params?.slug) {
       fetchData()
     }
-  }, [slug])
+  }, [params?.slug])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const newComment = {
-      id: Date.now(),
-      name,
-      email,
-      message,
-      date: new Date().toLocaleString('tr-TR'),
-      isApproved: false
+    setIsSubmitting(true)
+
+    try {
+      const newComment = {
+        blogId: blogPost.id,
+        name,
+        email,
+        message,
+        date: new Date().toLocaleString('tr-TR'),
+        isApproved: false
+      }
+
+      await addComment(newComment)
+      
+      setName('')
+      setEmail('')
+      setMessage('')
+      alert('Yorumunuz gönderildi ve onay bekliyor. Teşekkür ederiz!')
+    } catch (error) {
+      console.error('Error submitting comment:', error)
+      alert('Yorum gönderilirken bir hata oluştu. Lütfen tekrar deneyin.')
+    } finally {
+      setIsSubmitting(false)
     }
-
-    setComments([newComment, ...comments])
-    setName('')
-    setEmail('')
-    setMessage('')
-
-    alert('Yorumunuz gönderildi ve onay bekliyor. Teşekkür ederiz!')
   }
 
   if (!blogPost) {
-    return <p className="text-center">Yükleniyor...</p>
+    return <Loader />
   }
 
   return (
@@ -94,15 +106,53 @@ export default function BlogDetailPage() {
           {blogPost.title}
         </motion.h1>
 
-        <p className="text-gray-600 mb-8">{blogPost.date}</p>
+        <div className="flex items-center text-gray-600 mb-8 gap-2">
+          <span>{blogPost.city}</span>
+          {blogPost.city && blogPost.continent && <span>•</span>}
+          <span>{blogPost.continent}</span>
+          <span>•</span>
+          <span>{blogPost.date}</span>
+        </div>
+
+        {blogPost.coverImage && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative h-96 mb-8 rounded-lg overflow-hidden"
+          >
+            <Image
+              src={blogPost.coverImage}
+              alt={blogPost.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </motion.div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-8"
+          className="prose prose-lg max-w-none mb-8"
         >
-          <p className="text-gray-800 leading-relaxed break-words whitespace-normal">{blogPost.content}</p>
+          {blogPost.content && blogPost.content.map((item, index) => (
+            <div key={index} className="mb-6">
+              {item.type === 'text' ? (
+                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">{item.content}</p>
+              ) : item.type === 'image' ? (
+                <div className="relative h-96 rounded-lg overflow-hidden my-8">
+                  <Image
+                    src={item.content}
+                    alt={`Blog content image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : null}
+            </div>
+          ))}
         </motion.div>
 
         <motion.div
@@ -116,15 +166,17 @@ export default function BlogDetailPage() {
             <p className="text-gray-600">Henüz onaylanmış yorum bulunmuyor.</p>
           ) : (
             <div className="space-y-4 mb-8">
-              {comments.filter(comment => comment.isApproved).map((comment) => (
-                <div key={comment.id} className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-serif text-lg text-gray-800">{comment.name}</h3>
-                    <span className="text-sm text-gray-500">{comment.date}</span>
+              {comments
+                .filter(comment => comment.isApproved)
+                .map((comment) => (
+                  <div key={comment.id} className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-serif text-lg text-gray-800">{comment.name}</h3>
+                      <span className="text-sm text-gray-500">{comment.date}</span>
+                    </div>
+                    <p className="text-gray-700">{comment.message}</p>
                   </div>
-                  <p className="text-gray-700">{comment.message}</p>
-                </div>
-              ))}
+                ))}
             </div>
           )}
 
@@ -164,11 +216,12 @@ export default function BlogDetailPage() {
             <div className="flex items-center justify-end">
               <motion.button
                 type="submit"
-                className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                disabled={isSubmitting}
+                className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Yorum Yap
+                {isSubmitting ? 'Gönderiliyor...' : 'Yorum Yap'}
               </motion.button>
             </div>
           </form>

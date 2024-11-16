@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { fetchBlogs } from '../../services/firebaseService'; // Blog verilerini çekmek için Firebase servis fonksiyonunu import et
 import { Instagram, Facebook, Twitter, ChevronDown } from 'lucide-react';
+import { fetchPaintings } from '../../services/firebaseService'; // Assuming this function exists
 
 export default function Layout({ children, blogs }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [continents, setContinents] = useState({});
+  const [hasPaintings, setHasPaintings] = useState(false);
 
   useEffect(() => {
     const continentMap = {};
@@ -32,11 +33,16 @@ export default function Layout({ children, blogs }) {
     }
 
     setContinents(formattedContinents);
+
+    const checkPaintings = async () => {
+      const paintings = await fetchPaintings();
+      setHasPaintings(paintings.length > 0);
+    };
+    checkPaintings();
   }, [blogs]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* Main Navigation */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-between items-center md:items-end">
@@ -64,7 +70,6 @@ export default function Layout({ children, blogs }) {
               </nav>
             </div>
 
-            {/* Mobile Menu Button */}
             <button 
               className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -106,27 +111,29 @@ export default function Layout({ children, blogs }) {
                       >
                         <div className="py-1">
                           {cities.map(city => (
-                            <Link
-                              key={city}
-                              href={`/blog?city=${encodeURIComponent(city)}`}
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                              {city}
-                            </Link>
+                           <Link
+                            key={city}
+                            href={`/blog?city=${encodeURIComponent(city)}`}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            {city}
+                          </Link>
                           ))}
                         </div>
                       </motion.div>
                     )}
                   </motion.div>
                 ))}
-              <Link href="/blog" className="hover:text-gray-600 transition-colors duration-300">BLOG</Link>
+                <Link href="/blog" className="hover:text-gray-600 transition-colors duration-300">Blog</Link>
+                {hasPaintings && (
+                  <Link href="/paintings" className="hover:text-gray-600 transition-colors duration-300">Tablolarım</Link>
+                )}
               </AnimatePresence>
             </nav>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <motion.div 
           className="md:hidden border-b"
@@ -140,18 +147,17 @@ export default function Layout({ children, blogs }) {
               <Link href="/about" className="hover:text-gray-600 transition-colors duration-300">HAKKIMDA</Link>
               <Link href="/travel-routes" className="hover:text-gray-600 transition-colors duration-300">GEZİ ROTALARI</Link>
               <Link href="/blog" className="hover:text-gray-600 transition-colors duration-300">BLOG</Link>
+              {hasPaintings && (
+                <Link href="/paintings" className="hover:text-gray-600 transition-colors duration-300">TABLOLARIM</Link>
+              )}
               <Link href="/contact" className="hover:text-gray-600 transition-colors duration-300">İLETİŞİM</Link>
-              <Link href="/art" className="hover:text-gray-600 transition-colors duration-300">SANAT GALERİSİ</Link>
-              <Link href="/workshops" className="hover:text-gray-600 transition-colors duration-300">ATÖLYELER</Link>
             </div>
           </nav>
         </motion.div>
       )}
 
-      {/* Main Content */}
       <main className="flex-grow">{children}</main>
 
-      {/* Footer */}
       <footer className="border-t py-12">
         <div className="container mx-auto px-4 text-center">
           <div className="flex justify-center space-x-6 mb-8">

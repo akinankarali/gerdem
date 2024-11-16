@@ -1,36 +1,37 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { Instagram, Facebook, Twitter, Search } from 'lucide-react'
+import { addContactMessage } from '../../services/firebaseService'
 
 export default function ContactPage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const [comments, setComments] = useState([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState('idle')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const newComment= {
-      id: Date.now(),
-      name,
-      email,
-      message,
-      date: new Date().toLocaleString('tr-TR')
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    try {
+      await addContactMessage({ name, email, message })
+      setSubmitStatus('success')
+      setName('')
+      setEmail('')
+      setMessage('')
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
     }
-    setComments([newComment, ...comments])
-    setName('')
-    setEmail('')
-    setMessage('')
   }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-  
-      {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-12">
         <motion.h1 
           className="text-4xl font-serif text-center text-gray-900 mb-12"
@@ -84,14 +85,33 @@ export default function ContactPage() {
             <div className="flex items-center justify-end">
               <motion.button
                 type="submit"
-                className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                disabled={isSubmitting}
+                className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Gönder
+                {isSubmitting ? 'Gönderiliyor...' : 'Gönder'}
               </motion.button>
             </div>
           </motion.form>
+          {submitStatus === 'success' && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-green-600 text-center"
+            >
+              Mesajınız başarıyla gönderildi!
+            </motion.p>
+          )}
+          {submitStatus === 'error' && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-red-600 text-center"
+            >
+              Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.
+            </motion.p>
+          )}
         </div>
       </main>
     </div>

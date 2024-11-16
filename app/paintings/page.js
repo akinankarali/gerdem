@@ -1,127 +1,90 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { X } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { fetchPaintings } from '../../services/firebaseService'
+import { Loader2 } from 'lucide-react'
+import PaintingModal from '../components/PaintingModal'
 
-// Mock data for paintings
-const paintings = [
-  {
-    id: 1,
-    title: 'Yaz Esintisi',
-    image: '/assets/1111.jpeg',
-    price: '₺2,500',
-    description: 'Ege kıyılarından esinlenerek yapılmış bu tablo, yaz mevsiminin sıcaklığını ve denizin ferahlığını yansıtıyor.',
-    story: "Bu tabloyu, geçen yaz Çeşme'de geçirdiğim bir hafta sonunda yaptım. Sahilde otururken gördüğüm manzara beni o kadar etkiledi ki, hemen tuvale aktarmak istedim."
-  },
-  {
-    id: 2,
-    title: 'Sonbahar Yaprakları',
-    image: '/assets/1111.jpeg',
-    price: '₺1,800',
-    description: 'Sonbaharın sıcak renkleriyle bezeli bu tablo, mevsimin hüzünlü güzelliğini yansıtıyor.',
-    story: "Belgrad Ormanı'nda yaptığım bir yürüyüş sırasında, yerdeki yaprakların renk cümbüşü beni büyüledi. Bu tabloyu yaparken o anın duygusunu tekrar yaşadım."
-  },
-  {
-    id: 3,
-    title: 'İstanbul Silueti',
-    image: '/assets/1111.jpeg',
-    price: '₺3,000',
-    description: "İstanbul'un tarihi yarımadasının siluetini gün batımında resmeden bu tablo, şehrin büyüleyici atmosferini yansıtıyor.",
-    story: "Üsküdar'da bir arkadaşımı ziyaret ettiğim bir akşam, pencereden gördüğüm manzara karşısında adeta büyülendim. O an, bu tabloyu yapma fikri doğdu."
-  },
-]
-
-export default function Tablolar() {
+export default function PaintingsPage() {
+  const [paintings, setPaintings] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [selectedPainting, setSelectedPainting] = useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const openModal = (painting) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const paintingsData = await fetchPaintings()
+        setPaintings(paintingsData)
+      } catch (error) {
+        console.error('Error fetching paintings:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  const handlePaintingClick = (painting) => {
     setSelectedPainting(painting)
+    setIsModalOpen(true)
   }
 
-  const closeModal = () => {
-    setSelectedPainting(null)
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    )
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-serif text-center text-gray-900 mb-12">Tablolar</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {paintings.map((painting) => (
-          <motion.div
-            key={painting.id}
-            className="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => openModal(painting)}
-          >
-            <Image
-              src={painting.image}
-              alt={painting.title}
-              width={400}
-              height={300}
-              className="w-full h-64 object-cover"
-            />
-            <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{painting.title}</h2>
-              <p className="text-gray-600">{painting.price}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      <AnimatePresence>
-        {selectedPainting && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-            onClick={closeModal}
-          >
+    <div className="container mx-auto px-4 py-16">
+      <h1 className="text-4xl font-serif text-center mb-12">Tablolarım</h1>
+      {paintings.length === 0 ? (
+        <p className="text-center text-gray-600">Henüz tablo bulunmuyor.</p>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {paintings.map((painting, index) => (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-lg p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
+              key={painting.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-white rounded-lg overflow-hidden shadow-md cursor-pointer"
+              onClick={() => handlePaintingClick(painting)}
             >
-              <div className="flex justify-end">
-                <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
-                  <X className="h-6 w-6" />
-                </button>
+              <div className="relative h-64">
+                <Image
+                  src={painting.image || '/placeholder-painting.jpg'}
+                  alt={painting.title}
+                  layout="fill"
+                  objectFit="cover"
+                />
               </div>
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="md:w-1/2">
-                  <Image
-                    src={selectedPainting.image}
-                    alt={selectedPainting.title}
-                    width={400}
-                    height={300}
-                    className="w-full h-auto rounded-lg"
-                  />
-                </div>
-                <div className="md:w-1/2">
-                  <h2 className="text-2xl font-semibold mb-2">{selectedPainting.title}</h2>
-                  <p className="text-xl text-gray-700 mb-4">{selectedPainting.price}</p>
-                  <h3 className="text-lg font-semibold mb-2">Açıklama</h3>
-                  <p className="text-gray-600 mb-4">{selectedPainting.description}</p>
-                  <h3 className="text-lg font-semibold mb-2">Hikaye</h3>
-                  <p className="text-gray-600 mb-6">{selectedPainting.story}</p>
-                  <button
-                    className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-300"
-                    onClick={() => alert(`${selectedPainting.title} satın alma işlemi başlatıldı.`)}
-                  >
-                    Satın Al
-                  </button>
+              <div className="p-6">
+                <h2 className="font-serif text-xl mb-2">{painting.title}</h2>
+                <p className="text-gray-600 mb-4">{painting.description}</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold">{painting.priceTRY} TL</span>
+                  <span className="text-sm text-gray-500">{painting.priceEUR} EUR</span>
                 </div>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          ))}
+        </div>
+      )}
+      {selectedPainting && (
+        <PaintingModal
+          painting={selectedPainting}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   )
 }

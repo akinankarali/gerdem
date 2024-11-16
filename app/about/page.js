@@ -18,10 +18,10 @@ export default function AboutPage() {
       try {
         const aboutData = await fetchAboutData()
         if (aboutData.length > 0) {
-          const { title, content, imageUrl } = aboutData[0]
+          const { title, content, image } = aboutData[0]
           setAboutTitle(title || 'Hakkımda')
           setAboutContent(content || '')
-          setAboutImage(imageUrl || '/placeholder.svg?height=600&width=400')
+          setAboutImage(image || null)
         }
       } catch (error) {
         console.error('Error fetching about data:', error)
@@ -33,8 +33,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-
-      {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-12">
         <motion.h1 
           className="text-4xl font-serif text-center text-gray-900 mb-12"

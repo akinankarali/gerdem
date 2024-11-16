@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -23,7 +23,7 @@ function generateSlug(title) {
     .replace(/^-+|-+$/g, '')
 }
 
-export default function BlogPage() {
+function BlogList() {
   const [blogPosts, setBlogPosts] = useState([])
   const [filteredPosts, setFilteredPosts] = useState([])
   const searchParams = useSearchParams()
@@ -52,6 +52,46 @@ export default function BlogPage() {
   }, [city, blogPosts])
 
   return (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {filteredPosts.map((post, index) => (
+        <motion.div
+          key={post.id || index}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+        >
+          <Link href={`/blog/${generateSlug(post.title)}`} className="block group">
+            <div className="relative h-64 mb-4 overflow-hidden rounded-lg">
+              <Image
+                src={post.coverImage || '/placeholder-image.jpg'}
+                alt={post.title || 'Untitled'}
+                fill
+                priority={index < 6}
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
+            <h2 className="text-xl font-serif mb-2 group-hover:text-gray-600 transition-colors duration-300">
+              {post.title || 'Untitled'}
+            </h2>
+            <p className="text-gray-600 mb-2">{post.description || 'No description available.'}</p>
+            <div className="flex items-center text-sm text-gray-500 gap-2">
+              <span>{post.city}</span>
+              {post.city && post.continent && <span>•</span>}
+              <span>{post.continent}</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">{post.date || 'No date available'}</p>
+          </Link>
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
+export default function BlogPage() {
+  const searchParams = useSearchParams()
+  const city = searchParams.get('city')
+
+  return (
     <main className="flex-grow container mx-auto px-4 py-12">
       <motion.h1 
         className="text-4xl font-serif text-center text-gray-900 mb-12"
@@ -62,38 +102,9 @@ export default function BlogPage() {
         {city ? `${city}` : 'Blog'}
       </motion.h1>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredPosts.map((post, index) => (
-          <motion.div
-            key={post.id || index}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-          >
-            <Link href={`/blog/${generateSlug(post.title)}`} className="block group">
-              <div className="relative h-64 mb-4 overflow-hidden rounded-lg">
-                <Image
-                  src={post.coverImage || '/placeholder-image.jpg'}
-                  alt={post.title || 'Untitled'}
-                  fill
-                  priority={index < 6}
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <h2 className="text-xl font-serif mb-2 group-hover:text-gray-600 transition-colors duration-300">
-                {post.title || 'Untitled'}
-              </h2>
-              <p className="text-gray-600 mb-2">{post.description || 'No description available.'}</p>
-              <div className="flex items-center text-sm text-gray-500 gap-2">
-                <span>{post.city}</span>
-                {post.city && post.continent && <span>•</span>}
-                <span>{post.continent}</span>
-              </div>
-              <p className="text-sm text-gray-500 mt-2">{post.date || 'No date available'}</p>
-            </Link>
-          </motion.div>
-        ))}
-      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <BlogList />
+      </Suspense>
     </main>
   )
 }

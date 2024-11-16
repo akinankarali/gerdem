@@ -93,7 +93,7 @@ export default function BlogDetailPage() {
         <div className="mb-8">
           <Link href="/blog" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-300">
             <ArrowLeft className="mr-2 h-5 w-5" />
-            Blog'a Dön
+            Blog&apos;a Dön
           </Link>
         </div>
 

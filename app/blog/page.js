@@ -1,6 +1,5 @@
-'use client'
-
-import { useState, useEffect, Suspense } from 'react'
+import { Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -24,6 +23,8 @@ function generateSlug(title) {
 }
 
 function BlogList() {
+  'use client'
+  
   const [blogPosts, setBlogPosts] = useState([])
   const [filteredPosts, setFilteredPosts] = useState([])
   const searchParams = useSearchParams()
@@ -87,22 +88,42 @@ function BlogList() {
   )
 }
 
-export default function BlogPage() {
+function BlogHeader() {
+  'use client'
+  
   const searchParams = useSearchParams()
   const city = searchParams.get('city')
 
   return (
-    <main className="flex-grow container mx-auto px-4 py-12">
-      <motion.h1 
-        className="text-4xl font-serif text-center text-gray-900 mb-12"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {city ? `${city}` : 'Blog'}
-      </motion.h1>
+    <motion.h1 
+      className="text-4xl font-serif text-center text-gray-900 mb-12"
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {city ? `${city}` : 'Blog'}
+    </motion.h1>
+  )
+}
 
-      <Suspense fallback={<div>Loading...</div>}>
+export default function BlogPage() {
+  return (
+    <main className="flex-grow container mx-auto px-4 py-12">
+      <Suspense fallback={<div className="text-4xl font-serif text-center text-gray-900 mb-12">Loading...</div>}>
+        <BlogHeader />
+      </Suspense>
+      
+      <Suspense fallback={
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="h-64 bg-gray-200 rounded-lg mb-4" />
+              <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
+              <div className="h-4 bg-gray-200 rounded w-1/2" />
+            </div>
+          ))}
+        </div>
+      }>
         <BlogList />
       </Suspense>
     </main>

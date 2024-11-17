@@ -83,6 +83,9 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      <head>
+        <meta name="google-site-verification" content="KAQsStAuRRQPS5KM45TzogX9JSv9REVYUQcOzcIdkOs" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

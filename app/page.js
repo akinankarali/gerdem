@@ -8,6 +8,22 @@ import { fetchHomeData, fetchBlogs, fetchPaintings } from '../services/firebaseS
 import Loader from './components/Loader'
 import { Instagram, Facebook, Twitter, Search, ChevronDown } from 'lucide-react'
 
+function generateSlug(title) {
+  if (!title) {
+    return 'untitled'
+  }
+  return title
+    .toLowerCase()
+    .replace(/ğ/g, 'g')
+    .replace(/ü/g, 'u')
+    .replace(/ş/g, 's')
+    .replace(/ı/g, 'i')
+    .replace(/ç/g, 'c')
+    .replace(/ö/g, 'o')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 export default function HomePage() {
   const [homeData, setHomeData] = useState(null)
   const [blogPosts, setBlogPosts] = useState([])
@@ -166,7 +182,7 @@ export default function HomePage() {
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
             {blogPosts.map((post, index) => (
-              <Link href={`/blog/${post.title.replace(/\s+/g, '-').toLowerCase()}`} key={post.id || index} className="cursor-pointer">
+              <Link href={`/blog/${generateSlug(post.title)}`} key={post.id || index} className="cursor-pointer">
                 <motion.article
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}

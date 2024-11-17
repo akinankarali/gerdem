@@ -3,16 +3,18 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { Loader2 } from 'lucide-react'
 import BlogAdmin from '../components/BlogAdmin'
 import TravelRoutesAdmin from '../components/TravelRoutesAdmin'
 import CommentsAdmin from '../components/CommentsAdmin'
 import PaintingsAdmin from '../components/PaintingsAdmin'
 import AboutAdmin from '../components/AboutAdmin'
-import { Loader2 } from 'lucide-react'
 import { fetchPaintings, fetchHomeData, uploadImageAndSaveUrl, updateHomepageData, getContactMessages } from '../../services/firebaseService'
+import { auth, signInWithEmailAndPassword } from '../../firebase'
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [email, setEmail] = useState('admin@example.com')
   const [password, setPassword] = useState('')
   const [activeTab, setActiveTab] = useState('homepage')
   const [isUploading, setIsUploading] = useState(false)
@@ -24,48 +26,57 @@ export default function AdminPage() {
   const [introImage, setIntroImage] = useState('')
 
   const [paintings, setPaintings] = useState({ items: [] })
-
   const [contactMessages, setContactMessages] = useState([])
 
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true)
-      try {
-        const [homeData, paintingsData, messagesData] = await Promise.all([
-          fetchHomeData(),
-          fetchPaintings(),
-          getContactMessages()
-        ])
-
-        if (homeData && homeData.length > 0) {
-          setHeroImage(homeData[0].heroImage || '')
-          setIntroTitle(homeData[0].title || '')
-          setIntroContent(homeData[0].content || '')
-          setIntroImage(homeData[0].summaryImage || '')
-        } else {
-          console.warn("Home data is empty or undefined")
-        }
-
-        setPaintings(paintingsData[0] || { items: [] })
-        setContactMessages(messagesData || [])
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsAuthenticated(!!user)
+      if (user) {
+        fetchInitialData()
+      } else {
         setIsLoading(false)
       }
-    }
+    })
 
-    fetchData()
+    return () => unsubscribe()
   }, [])
 
-  const handleLogin = (e) => {
-    e.preventDefault()
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
-      setIsAuthenticated(true)
-    } else {
-      alert('Yanlış şifre!')
+  const fetchInitialData = async () => {
+    setIsLoading(true)
+    try {
+      const [homeData, paintingsData, messagesData] = await Promise.all([
+        fetchHomeData(),
+        fetchPaintings(),
+        getContactMessages()
+      ])
+
+      if (homeData && homeData.length > 0) {
+        setHeroImage(homeData[0].heroImage || '')
+        setIntroTitle(homeData[0].title || '')
+        setIntroContent(homeData[0].content || '')
+        setIntroImage(homeData[0].summaryImage || '')
+      }
+
+      setPaintings(paintingsData[0] || { items: [] })
+      setContactMessages(messagesData || [])
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      setIsAuthenticated(true);
+      console.log('Giriş başarılı:', userCredential.user);
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Giriş başarısız. Lütfen e-posta ve şifrenizi kontrol edin.');
+    }
+  };
 
   const handleImageUpload = async (file, type) => {
     if (file instanceof File) {
@@ -185,6 +196,13 @@ export default function AdminPage() {
         >
           <h1 className="text-2xl font-bold mb-4 text-center">Admin Girişi</h1>
           <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="E-posta"
+              className="w-full p-2 mb-4 border rounded"
+            />
             <input
               type="password"
               value={password}
@@ -326,7 +344,7 @@ export default function AdminPage() {
       )}
 
       {activeTab === 'blog' && <BlogAdmin />}
-      {activeTab === 'paintings' && <PaintingsAdmin />}
+      {activeTab === 'paintings' && <PaintingsAdmin paintings={paintings} setPaintings={setPaintings} />}
       {activeTab === 'travel' && <TravelRoutesAdmin />}
       {activeTab === 'about' && <AboutAdmin />}
       {activeTab === 'comments' && <CommentsAdmin />}

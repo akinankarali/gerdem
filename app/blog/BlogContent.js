@@ -83,7 +83,13 @@ export default function BlogContent() {
               <h2 className="text-xl font-serif mb-2 group-hover:text-gray-600 transition-colors duration-300">
                 {post.title || 'Untitled'}
               </h2>
-              <p className="text-gray-600 mb-2 break-words overflow-hidden" style={{ overflowWrap: 'anywhere', wordWrap: 'break-word' }}>{post.description || 'No description available.'}</p>
+              <p className="text-gray-600 mb-2 break-words overflow-hidden" style={{ overflowWrap: 'anywhere', wordWrap: 'break-word' }}>
+                {post.description 
+                  ? (post.description.length > 120 
+                      ? `${post.description.substring(0, 120)}...` 
+                      : post.description)
+                  : 'No description available.'}
+              </p>
               <div className="flex items-center text-sm text-gray-500 gap-2">
                 <span>{post.city}</span>
                 {post.city && post.continent && <span>•</span>}

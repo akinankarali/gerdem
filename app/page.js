@@ -203,7 +203,13 @@ export default function HomePage() {
                   </motion.div>
                   <div className="p-6">
                     <h3 className="font-serif text-xl mb-2">{post.title}</h3>
-                    <p className="text-gray-600 mb-4">{post.description || 'No details available.'}</p>
+                    <p className="text-gray-600 mb-4 break-words overflow-hidden" style={{ overflowWrap: 'anywhere', wordWrap: 'break-word' }}>
+                      {post.description 
+                        ? (post.description.length > 100 
+                            ? `${post.description.substring(0, 100)}...` 
+                            : post.description)
+                        : 'No details available.'}
+                    </p>
                     <span className="text-sm font-semibold hover:text-gray-600 transition-colors duration-300">
                       READ MORE →
                     </span>

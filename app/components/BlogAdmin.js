@@ -144,6 +144,13 @@ export default function BlogAdmin() {
       description: post.description,
       content: post.content
     })
+    
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }, 100);
   }
 
   const handleDelete = async (postId) => {
@@ -163,7 +170,7 @@ export default function BlogAdmin() {
     <div className="max-w-4xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">{editingPost ? 'Edit Blog Post' : 'New Blog Post'}</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
             placeholder="Title"
@@ -221,8 +228,8 @@ export default function BlogAdmin() {
           placeholder="Short Description"
           value={newBlogPost.description}
           onChange={(e) => setNewBlogPost(prev => ({ ...prev, description: e.target.value }))}
-          className="w-full p-2 border rounded-lg h-24"
-          style={{ overflowWrap: 'break-word', wordWrap: 'break-word' }}
+          className="w-full p-2 border rounded-lg h-24 break-words"
+          style={{ overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%' }}
         />
 
         <div className="space-y-4">
@@ -250,8 +257,17 @@ export default function BlogAdmin() {
                 </div>
                 
                 {item.type === 'text' ? (
-                  <div className="flex-1 p-3 bg-gray-50 rounded-lg break-words" style={{ overflowWrap: 'anywhere', wordWrap: 'break-word' }}>
-                    {item.content}
+                  <div className="flex-1 overflow-hidden">
+                    <textarea
+                      value={item.content}
+                      onChange={(e) => {
+                        const updatedContent = [...newBlogPost.content];
+                        updatedContent[index] = { ...item, content: e.target.value };
+                        setNewBlogPost(prev => ({ ...prev, content: updatedContent }));
+                      }}
+                      className="w-full p-3 bg-gray-50 rounded-lg break-words border border-gray-200"
+                      style={{ overflowWrap: 'anywhere', wordWrap: 'break-word', minHeight: "100px", wordBreak: 'break-word', maxWidth: '100%' }}
+                    />
                   </div>
                 ) : (
                   <div className="relative w-40 h-40">
@@ -291,14 +307,14 @@ export default function BlogAdmin() {
             ))}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row gap-2">
             <div className="flex-1">
               <textarea
                 value={currentText}
                 onChange={(e) => setCurrentText(e.target.value)}
                 placeholder="Add text..."
-                className="w-full p-2 border rounded-lg h-24"
-                style={{ overflowWrap: 'break-word', wordWrap: 'break-word' }}
+                className="w-full p-2 border rounded-lg h-24 break-words"
+                style={{ overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%' }}
               />
               <button
                 type="button"
@@ -346,16 +362,16 @@ export default function BlogAdmin() {
       <div className="mt-12">
         <h3 className="text-xl font-bold mb-4">Blog Posts</h3>
         {blogPosts.map((post) => (
-          <div key={post.id} className="border p-4 rounded mb-4">
-            <h4 className="font-bold">{post.title}</h4>
+          <div key={post.id} className="border p-4 rounded mb-4 overflow-hidden">
+            <h4 className="font-bold break-words" style={{ wordBreak: 'break-word' }}>{post.title}</h4>
             {post.coverImage && (
               <div className="relative w-32 h-32 mb-2">
                 <Image src={post.coverImage} alt="Blog kapak resmi" layout="fill" objectFit="cover" className="rounded" />
               </div>
             )}
-            <p>City and Continent: {post.city}, {post.continent}</p>
-            <p>Date: {post.date}</p>
-            <p>Description: {post.description}</p>
+            <p className="break-words" style={{ wordBreak: 'break-word' }}>City and Continent: {post.city}, {post.continent}</p>
+            <p className="break-words" style={{ wordBreak: 'break-word' }}>Date: {post.date}</p>
+            <p className="break-words" style={{ wordBreak: 'break-word' }}>Description: {post.description.length > 100 ? `${post.description.substring(0, 100)}...` : post.description}</p>
             <div className="mt-4 space-y-4">
               {post.content.slice(0, 2).map((item, index) => (
                 <div key={index}>

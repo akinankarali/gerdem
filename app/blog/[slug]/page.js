@@ -111,7 +111,7 @@ function BlogContent({ blogPost, comments }) {
         {blogPost.content && blogPost.content.map((item, index) => (
           <div key={index} className="mb-6">
             {item.type === 'text' ? (
-              <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">{item.content}</p>
+              <p className="text-gray-800 leading-relaxed whitespace-pre-wrap break-words overflow-hidden" style={{ overflowWrap: 'anywhere', wordWrap: 'break-word' }}>{item.content}</p>
             ) : item.type === 'image' ? (
               <div className="relative h-96 rounded-lg overflow-hidden my-8">
                 <Image

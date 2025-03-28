@@ -222,6 +222,7 @@ export default function BlogAdmin() {
           value={newBlogPost.description}
           onChange={(e) => setNewBlogPost(prev => ({ ...prev, description: e.target.value }))}
           className="w-full p-2 border rounded-lg h-24"
+          style={{ overflowWrap: 'break-word', wordWrap: 'break-word' }}
         />
 
         <div className="space-y-4">
@@ -249,7 +250,7 @@ export default function BlogAdmin() {
                 </div>
                 
                 {item.type === 'text' ? (
-                  <div className="flex-1 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex-1 p-3 bg-gray-50 rounded-lg break-words" style={{ overflowWrap: 'anywhere', wordWrap: 'break-word' }}>
                     {item.content}
                   </div>
                 ) : (
@@ -297,6 +298,7 @@ export default function BlogAdmin() {
                 onChange={(e) => setCurrentText(e.target.value)}
                 placeholder="Add text..."
                 className="w-full p-2 border rounded-lg h-24"
+                style={{ overflowWrap: 'break-word', wordWrap: 'break-word' }}
               />
               <button
                 type="button"
@@ -358,7 +360,7 @@ export default function BlogAdmin() {
               {post.content.slice(0, 2).map((item, index) => (
                 <div key={index}>
                   {item.type === 'text' ? (
-                    <p>{item.content.substring(0, 100)}...</p>
+                    <p className="break-words overflow-hidden" style={{ overflowWrap: 'anywhere', wordWrap: 'break-word' }}>{item.content.substring(0, 100)}...</p>
                   ) : (
                     <div className="relative w-32 h-32">
                       <Image src={item.content} alt={`Content ${index + 1}`} layout="fill" objectFit="cover" className="rounded" />

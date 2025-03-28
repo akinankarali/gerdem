@@ -90,8 +90,10 @@ export default function AboutAdmin() {
             onChange={(e) => setAboutData(prev => ({ ...prev, content: e.target.value }))}
             rows={10}
             className="w-full p-2 border rounded-md"
+            placeholder="Enter your content here. Line breaks and paragraphs will be preserved in the display."
             required
           />
+          <p className="mt-1 text-xs text-gray-500">Line breaks and paragraphs will be preserved when displayed on the about page.</p>
         </div>
 
         <div>

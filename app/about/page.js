@@ -64,7 +64,7 @@ export default function AboutPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <div className="space-y-4 text-gray-600">
-                <p>{aboutContent}</p>
+                <div className="whitespace-pre-line">{aboutContent}</div>
               </div>
             </motion.div>
           </div>

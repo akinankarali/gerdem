@@ -16,7 +16,12 @@ export default function TravelRoutes() {
     async function loadTravelRoutes() {
       try {
         const routes = await fetchTravelRoutes()
-        setTravelRoutes(routes[0]?.item || [])
+        const sortedRoutes = [...(routes[0]?.item || [])].sort((a, b) => {
+          const yearA = parseInt(a.year) || 0;
+          const yearB = parseInt(b.year) || 0;
+          return yearA - yearB;
+        });
+        setTravelRoutes(sortedRoutes)
       } catch (error) {
         console.error('Error fetching travel routes:', error)
       } finally {

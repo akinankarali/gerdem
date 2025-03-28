@@ -110,11 +110,11 @@ export default function BlogAdmin() {
         setBlogPosts(prevPosts => prevPosts.map(post => 
           post.id === editingPost.id ? { ...post, ...postData } : post
         ))
-        alert('Blog yazısı başarıyla güncellendi!')
+        alert('Blog content updated!')
       } else {
         const newPost = await addBlogPost(postData)
         setBlogPosts(prevPosts => [...prevPosts, newPost])
-        alert('Blog yazısı başarıyla eklendi!')
+        alert('Blog post added')
       }
 
       setNewBlogPost({
@@ -128,8 +128,8 @@ export default function BlogAdmin() {
       })
       setEditingPost(null)
     } catch (error) {
-      console.error('Blog yazısı işlemi sırasında hata oluştu:', error)
-      alert('Blog yazısı işlemi sırasında bir hata oluştu.')
+      console.error('Error blog content:', error)
+      alert('rror blog content.')
     }
   }
 
@@ -147,26 +147,26 @@ export default function BlogAdmin() {
   }
 
   const handleDelete = async (postId) => {
-    if (window.confirm('Bu blog yazısını silmek istediğinizden emin misiniz?')) {
+    if (window.confirm('Are you sure for deleting blog post')) {
       try {
         await deleteBlogPost(postId)
         setBlogPosts(prevPosts => prevPosts.filter(post => post.id !== postId))
-        alert('Blog yazısı başarıyla silindi!')
+        alert('Blog post deleted!')
       } catch (error) {
-        console.error('Blog yazısı silinirken hata oluştu:', error)
-        alert('Blog yazısı silinirken bir hata oluştu.')
+        console.error('Error deleting blog post:', error)
+        alert('Error deleting blog post.')
       }
     }
   }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">{editingPost ? 'Blog Yazısını Düzenle' : 'Yeni Blog Yazısı'}</h2>
+      <h2 className="text-2xl font-bold mb-6">{editingPost ? 'Edit Blog Post' : 'New Blog Post'}</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <input
             type="text"
-            placeholder="Başlık"
+            placeholder="Title"
             value={newBlogPost.title}
             onChange={(e) => setNewBlogPost(prev => ({ ...prev, title: e.target.value }))}
             className="p-2 border rounded-lg"
@@ -188,7 +188,7 @@ export default function BlogAdmin() {
         </div>
 
         <div className="space-y-2">
-          <label className="block font-medium">Kapak Fotoğrafı</label>
+          <label className="block font-medium">Cover Image</label>
           <div className="flex items-center gap-4">
             <input
               type="file"
@@ -202,7 +202,7 @@ export default function BlogAdmin() {
               className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
             >
               <ImageIcon className="w-5 h-5" />
-              Kapak Fotoğrafı Seç
+              Select Cover Image
             </label>
             {newBlogPost.coverImage && (
               <div className="relative w-20 h-20">
@@ -218,14 +218,14 @@ export default function BlogAdmin() {
         </div>
 
         <textarea
-          placeholder="Kısa Açıklama"
+          placeholder="Short Description"
           value={newBlogPost.description}
           onChange={(e) => setNewBlogPost(prev => ({ ...prev, description: e.target.value }))}
           className="w-full p-2 border rounded-lg h-24"
         />
 
         <div className="space-y-4">
-          <h3 className="font-medium">İçerik</h3>
+          <h3 className="font-medium">Content</h3>
           <div className="space-y-4">
             {newBlogPost.content.map((item, index) => (
               <div key={index} className="flex items-start gap-2 group relative">
@@ -295,7 +295,7 @@ export default function BlogAdmin() {
               <textarea
                 value={currentText}
                 onChange={(e) => setCurrentText(e.target.value)}
-                placeholder="Metin ekle..."
+                placeholder="Add text..."
                 className="w-full p-2 border rounded-lg h-24"
               />
               <button
@@ -303,7 +303,7 @@ export default function BlogAdmin() {
                 onClick={() => handleAddText()}
                 className="mt-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
               >
-                Metin Ekle
+                Add Text
               </button>
             </div>
             <div className="flex items-start">
@@ -319,7 +319,7 @@ export default function BlogAdmin() {
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
               >
                 <ImageIcon className="w-5 h-5" />
-                Fotoğraf Ekle
+                Add Image
               </label>
             </div>
           </div>
@@ -333,7 +333,7 @@ export default function BlogAdmin() {
           {isUploading ? (
             <span className="flex items-center justify-center gap-2">
               <Loader2 className="w-5 h-5 animate-spin" />
-              Yükleniyor...
+              Loading...
             </span>
           ) : (
             editingPost ? 'Blog Yazısını Güncelle' : 'Blog Yazısı Ekle'
@@ -342,7 +342,7 @@ export default function BlogAdmin() {
       </form>
 
       <div className="mt-12">
-        <h3 className="text-xl font-bold mb-4">Mevcut Blog Yazıları</h3>
+        <h3 className="text-xl font-bold mb-4">Blog Posts</h3>
         {blogPosts.map((post) => (
           <div key={post.id} className="border p-4 rounded mb-4">
             <h4 className="font-bold">{post.title}</h4>
@@ -351,9 +351,9 @@ export default function BlogAdmin() {
                 <Image src={post.coverImage} alt="Blog kapak resmi" layout="fill" objectFit="cover" className="rounded" />
               </div>
             )}
-            <p>Şehir ve Kıta: {post.city}, {post.continent}</p>
-            <p>Tarih: {post.date}</p>
-            <p>Açıklama: {post.description}</p>
+            <p>City and Continent: {post.city}, {post.continent}</p>
+            <p>Date: {post.date}</p>
+            <p>Description: {post.description}</p>
             <div className="mt-4 space-y-4">
               {post.content.slice(0, 2).map((item, index) => (
                 <div key={index}>

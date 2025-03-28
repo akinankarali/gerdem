@@ -79,7 +79,7 @@ export default function TravelRoutesAdmin() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Başlık (Şehir, Ülke)
+              Title (Şehir, Ülke)
             </label>
             <input
               type="text"
@@ -107,7 +107,7 @@ export default function TravelRoutesAdmin() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Açıklama
+              Description
             </label>
             <textarea
               value={newTravelRoute.description}
@@ -120,7 +120,7 @@ export default function TravelRoutesAdmin() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Gezi Görseli
+              Gezi Imagei
             </label>
             <div className="flex items-center space-x-4">
               <input
@@ -134,7 +134,7 @@ export default function TravelRoutesAdmin() {
                 htmlFor="travelImage"
                 className="cursor-pointer bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
               >
-                Görsel Seç
+                Image Seç
               </label>
               {newTravelRoute.image && (
                 <div className="relative w-20 h-20">

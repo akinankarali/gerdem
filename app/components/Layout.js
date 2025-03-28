@@ -48,8 +48,8 @@ export default function Layout({ children, blogs }) {
           <div className="flex justify-between items-center md:items-end">
             <div className="hidden md:block w-1/4">
               <nav className="flex space-x-6 text-sm">
-                <Link href="/" className="hover:text-gray-600 transition-colors duration-300">ANA SAYFA</Link>
-                <Link href="/about" className="hover:text-gray-600 transition-colors duration-300">HAKKIMDA</Link>
+                <Link href="/" className="hover:text-gray-600 transition-colors duration-300">HOME</Link>
+                <Link href="/about" className="hover:text-gray-600 transition-colors duration-300">ABOUT</Link>
               </nav>
             </div>
 
@@ -65,8 +65,8 @@ export default function Layout({ children, blogs }) {
 
             <div className="hidden md:block w-1/4">
               <nav className="flex justify-end space-x-6 text-sm">
-                <Link href="/travel-routes" className="hover:text-gray-600 transition-colors duration-300">GEZİ ROTALARI</Link>
-                <Link href="/contact" className="hover:text-gray-600 transition-colors duration-300">İLETİŞİM</Link>
+                <Link href="/travel-routes" className="hover:text-gray-600 transition-colors duration-300">TRAVEL ROUTES</Link>
+                <Link href="/contact" className="hover:text-gray-600 transition-colors duration-300">CONTACT</Link>
               </nav>
             </div>
 
@@ -126,7 +126,7 @@ export default function Layout({ children, blogs }) {
                 ))}
                 <Link href="/blog" className="hover:text-gray-600 transition-colors duration-300">Blog</Link>
                 {hasPaintings && (
-                  <Link href="/paintings" className="hover:text-gray-600 transition-colors duration-300">Tablolarım</Link>
+                  <Link href="/paintings" className="hover:text-gray-600 transition-colors duration-300">My Paintings</Link>
                 )}
               </AnimatePresence>
             </nav>
@@ -143,14 +143,14 @@ export default function Layout({ children, blogs }) {
         >
           <nav className="container mx-auto px-4 py-4">
             <div className="flex flex-col space-y-3 text-sm">
-              <Link href="/" className="hover:text-gray-600 transition-colors duration-300">ANA SAYFA</Link>
-              <Link href="/about" className="hover:text-gray-600 transition-colors duration-300">HAKKIMDA</Link>
-              <Link href="/travel-routes" className="hover:text-gray-600 transition-colors duration-300">GEZİ ROTALARI</Link>
+              <Link href="/" className="hover:text-gray-600 transition-colors duration-300">HOME</Link>
+              <Link href="/about" className="hover:text-gray-600 transition-colors duration-300">ABOUT</Link>
+              <Link href="/travel-routes" className="hover:text-gray-600 transition-colors duration-300">TRAVEL ROUTES</Link>
               <Link href="/blog" className="hover:text-gray-600 transition-colors duration-300">BLOG</Link>
               {hasPaintings && (
-                <Link href="/paintings" className="hover:text-gray-600 transition-colors duration-300">TABLOLARIM</Link>
+                <Link href="/paintings" className="hover:text-gray-600 transition-colors duration-300">MY PAINTINGS</Link>
               )}
-              <Link href="/contact" className="hover:text-gray-600 transition-colors duration-300">İLETİŞİM</Link>
+              <Link href="/contact" className="hover:text-gray-600 transition-colors duration-300">CONTACT</Link>
             </div>
           </nav>
         </motion.div>
@@ -162,7 +162,7 @@ export default function Layout({ children, blogs }) {
         <div className="container mx-auto px-4 text-center">
           <div className="flex justify-center space-x-6 mb-8">
             <motion.a 
-              href="https://instagram.com" 
+              href="https://www.instagram.com/gerdem93/" 
               className="text-gray-600 hover:text-gray-900 transition-colors duration-300"
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
@@ -170,24 +170,16 @@ export default function Layout({ children, blogs }) {
               <Instagram className="h-5 w-5" />
             </motion.a>
             <motion.a 
-              href="https://facebook.com" 
+              href="https://www.facebook.com/gozde.erdem.908" 
               className="text-gray-600 hover:text-gray-900 transition-colors duration-300"
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
             >
               <Facebook className="h-5 w-5" />
             </motion.a>
-            <motion.a 
-              href="https://twitter.com" 
-              className="text-gray-600 hover:text-gray-900 transition-colors duration-300"
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Twitter className="h-5 w-5" />
-            </motion.a>
           </div>
           <p className="text-sm text-gray-600">
-            &copy; {new Date().getFullYear()} Gözde Erdem. Tüm hakları saklıdır.
+            &copy; {new Date().getFullYear()} Gözde Erdem. All rights reserved.
           </p>
         </div>
       </footer>

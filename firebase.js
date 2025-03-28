@@ -4,14 +4,18 @@ import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
+// For development purposes only. Replace with your Firebase project configuration
+// In production, use environment variables (.env.local)
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyAUkg5yu2TlxOH4cD2rCE7MxCt3f9SEWQo",
+  authDomain: "gerdem-cef21.firebaseapp.com",
+  projectId: "gerdem-cef21",
+  storageBucket: "gerdem-cef21.firebasestorage.app",
+  messagingSenderId: "276621950305",
+  appId: "1:276621950305:web:44bbb910a3e61ff2055920",
+  measurementId: "G-P6WTWRWQ0W",
+
+  
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();

@@ -19,7 +19,7 @@ export default function AboutPage() {
         const aboutData = await fetchAboutData()
         if (aboutData.length > 0) {
           const { title, content, image } = aboutData[0]
-          setAboutTitle(title || 'Hakkımda')
+          setAboutTitle(title || 'About Me')
           setAboutContent(content || '')
           setAboutImage(image || null)
         }

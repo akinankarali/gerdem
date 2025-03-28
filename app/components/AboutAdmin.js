@@ -40,10 +40,10 @@ export default function AboutAdmin() {
     try {
       const imageUrl = await uploadAboutImage(file)
       setAboutData(prev => ({ ...prev, image: imageUrl }))
-      alert('Görsel başarıyla yüklendi!')
+      alert('Image uploaded successfully!')
     } catch (error) {
       console.error('Error uploading image:', error)
-      alert('Görsel yüklenirken bir hata oluştu.')
+      alert('An error occurred while uploading the image.')
     } finally {
       setIsLoading(false)
     }
@@ -55,10 +55,10 @@ export default function AboutAdmin() {
 
     try {
       await updateAboutPage(aboutData)
-      alert('Hakkımda sayfası başarıyla güncellendi!')
+      alert('About page updated!')
     } catch (error) {
       console.error('Error updating about page:', error)
-      alert('Güncelleme sırasında bir hata oluştu.')
+      alert('Error updating about page.')
     } finally {
       setIsLoading(false)
     }
@@ -66,11 +66,11 @@ export default function AboutAdmin() {
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-md mb-8">
-      <h2 className="text-2xl font-bold mb-6">Hakkımda Sayfası Düzenleme</h2>
+      <h2 className="text-2xl font-bold mb-6">Edit About Page</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Başlık
+            Title
           </label>
           <input
             type="text"
@@ -83,7 +83,7 @@ export default function AboutAdmin() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            İçerik
+            Content
           </label>
           <textarea
             value={aboutData.content}
@@ -96,7 +96,7 @@ export default function AboutAdmin() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Profil Görseli
+            Profil Image
           </label>
           <div className="flex items-center space-x-4">
             <input
@@ -110,7 +110,7 @@ export default function AboutAdmin() {
               htmlFor="profileImage"
               className="cursor-pointer bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
             >
-              Görsel Seç
+              Select Image
             </label>
             {aboutData.image && (
               <div className="relative w-32 h-32">
@@ -133,10 +133,10 @@ export default function AboutAdmin() {
           {isLoading ? (
             <span className="flex items-center justify-center">
               <Loader2 className="w-5 h-5 animate-spin mr-2" />
-              Güncelleniyor...
+              Updating...
             </span>
           ) : (
-            'Hakkımda Sayfasını Güncelle'
+            'Update About Page'
           )}
         </button>
       </form>

@@ -124,7 +124,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              Tablolarım
+              My Paintings
             </motion.h2>
             <div className="grid md:grid-cols-3 gap-8">
               {paintings.slice(0, 3).map((painting, index) => (
@@ -162,7 +162,7 @@ export default function HomePage() {
                 transition={{ duration: 0.3 }}
               >
                 <Link href="/paintings" className="inline-block bg-black text-white px-6 py-3 text-sm font-semibold hover:bg-gray-800 transition-colors duration-300 rounded-full">
-                  DAHA FAZLA TABLO GÖR
+                  SEE MORE PAINTINGS
                 </Link>
               </motion.div>
             </div>
@@ -178,7 +178,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            Son Yazılarım
+            My Latest Posts
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-8">
             {blogPosts.map((post, index) => (
@@ -203,9 +203,9 @@ export default function HomePage() {
                   </motion.div>
                   <div className="p-6">
                     <h3 className="font-serif text-xl mb-2">{post.title}</h3>
-                    <p className="text-gray-600 mb-4">{post.description || 'Detay bulunmuyor.'}</p>
+                    <p className="text-gray-600 mb-4">{post.description || 'No details available.'}</p>
                     <span className="text-sm font-semibold hover:text-gray-600 transition-colors duration-300">
-                      DEVAMINI OKU →
+                      READ MORE →
                     </span>
                   </div>
                 </motion.article>

@@ -53,7 +53,7 @@ export default function PaintingModal({ painting, isOpen, onClose }) {
                   <span className="text-lg text-gray-500">{painting.priceEUR} EUR</span>
                 </div>
                 <button className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors">
-                  Satın Al
+                  Buy Now
                 </button>
               </div>
             </div>

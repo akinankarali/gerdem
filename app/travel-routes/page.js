@@ -7,7 +7,7 @@ import Loader from '../components/Loader'
 import { ChevronDown, MapPin } from 'lucide-react'
 import { fetchTravelRoutes } from '../../services/firebaseService'
 
-export default function GeziRotalari() {
+export default function TravelRoutes() {
   const [expandedRoute, setExpandedRoute] = useState(null)
   const [travelRoutes, setTravelRoutes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -41,7 +41,7 @@ export default function GeziRotalari() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Gezi Rotalarım
+            My Travel Routes
           </motion.h1>
 
           <div className="relative overflow-hidden">
@@ -112,7 +112,7 @@ export default function GeziRotalari() {
                     onClick={() => setExpandedRoute(expandedRoute === route.id ? null : route.id)}
                     whileHover={{ scale: 1.05 }}
                   >
-                    {expandedRoute === route.id ? 'Gizle' : 'Detayları Gör'}
+                    {expandedRoute === route.id ? 'Hide' : 'See Details'}
                     <ChevronDown className={`ml-1 transform transition-transform ${expandedRoute === route.id ? 'rotate-180' : ''}`} />
                   </motion.button>
                 </div>

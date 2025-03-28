@@ -235,52 +235,52 @@ export default function AdminPage() {
           className={`px-4 py-2 ${activeTab === 'homepage' ? 'bg-black text-white' : 'bg-white'}`}
           onClick={() => setActiveTab('homepage')}
         >
-          Ana Sayfa
+          Home Page
         </button>
         <button
           className={`px-4 py-2 ${activeTab === 'blog' ? 'bg-black text-white' : 'bg-white'}`}
           onClick={() => setActiveTab('blog')}
         >
-          Blog Yazıları
+          Blog Posts
         </button>
         <button
           className={`px-4 py-2 ${activeTab === 'paintings' ? 'bg-black text-white' : 'bg-white'}`}
           onClick={() => setActiveTab('paintings')}
         >
-          Tablolar
+          My Paintings
         </button>
         <button
           className={`px-4 py-2 ${activeTab === 'travel' ? 'bg-black text-white' : 'bg-white'}`}
           onClick={() => setActiveTab('travel')}
         >
-          Gezi Rotaları
+          Travel Routes
         </button>
         <button
           className={`px-4 py-2 ${activeTab === 'about' ? 'bg-black text-white' : 'bg-white'}`}
           onClick={() => setActiveTab('about')}
         >
-          Hakkımda
+          About
         </button>
         <button
           className={`px-4 py-2 ${activeTab === 'comments' ? 'bg-black text-white' : 'bg-white'}`}
           onClick={() => setActiveTab('comments')}
         >
-          Yorumlar
+          Comments
         </button>
         <button
           className={`px-4 py-2 ${activeTab === 'contact' ? 'bg-black text-white' : 'bg-white'}`}
           onClick={() => setActiveTab('contact')}
         >
-          İletişim Mesajları
+          Contact Messages
         </button>
       </div>
 
       {activeTab === 'homepage' && (
         <div className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4">Ana Sayfa Düzenleme</h2>
+          <h2 className="text-2xl font-bold mb-4">Home Page Edit</h2>
           <form onSubmit={handleUpdateHomepage} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Hero Görseli</label>
+              <label className="block text-sm font-medium text-gray-700">Hero Image</label>
               <div className="mt-1 flex items-center">
                 {heroImage && (
                   <div className="relative w-32 h-32 mr-4">
@@ -297,7 +297,7 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Tanıtım Başlığı</label>
+              <label className="block text-sm font-medium text-gray-700">Introductory Title</label>
               <input
                 type="text"
                 value={introTitle}
@@ -307,7 +307,7 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Tanıtım İçeriği</label>
+              <label className="block text-sm font-medium text-gray-700">Introductory Content</label>
               <textarea
                 value={introContent}
                 onChange={(e) => setIntroContent(e.target.value)}
@@ -317,7 +317,7 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Tanıtım Görseli</label>
+              <label className="block text-sm font-medium text-gray-700">Introductory Image</label>
               <div className="mt-1 flex items-center">
                 {introImage && (
                   <div className="relative w-32 h-32 mr-4">
@@ -337,7 +337,7 @@ export default function AdminPage() {
               type="submit"
               className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
             >
-              Ana Sayfa Güncelle
+              Home Page Update
             </button>
           </form>
         </div>
@@ -351,9 +351,9 @@ export default function AdminPage() {
 
       {activeTab === 'contact' && (
         <div className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4">İletişim Mesajları</h2>
+          <h2 className="text-2xl font-bold mb-4">Contact Messages</h2>
           {contactMessages.length === 0 ? (
-            <p>Henüz mesaj bulunmuyor.</p>
+            <p>No comments yet.</p>
           ) : (
             <div className="grid gap-4">
               {contactMessages.map((message) => (
@@ -377,7 +377,7 @@ export default function AdminPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-4 rounded-lg flex items-center">
             <Loader2 className="animate-spin mr-2" />
-            <span>Yükleniyor...</span>
+            <span>Loading...</span>
           </div>
         </div>
       )}

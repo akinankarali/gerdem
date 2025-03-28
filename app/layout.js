@@ -27,7 +27,7 @@ async function getBlogs() {
 
 export const metadata = {
   title: "Gözde Erdem",
-  description: "Gözde Erdem'in kişisel blog sitesi.",
+  description: "Gözde Erdem's personal blog site.",
   keywords: ["Gözde Erdem", "Traveller", "Blog", "Blogger"],
   authors: [{ name: "Gözde Erdem" }],
   creator: "Gözde Erdem",
@@ -57,7 +57,7 @@ export const metadata = {
     locale: "tr_TR",
     url: "https://www.gerdem.net",
     title: "Gözde Erdem",
-    description: "Gözde Erdem'in kişisel blog sitesi.",
+    description: "Gözde Erdem's personal blog site.",
     siteName: "Gözde Erdem",
     images: [
       {
@@ -71,7 +71,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Gözde Erdem",
-    description: "Gözde Erdem'in kişisel blog sitesi.",
+    description: "Gözde Erdem's personal blog site.",
     creator: "@gozdeerdem",
     images: ["https://firebasestorage.googleapis.com/v0/b/gerdem-cef21.firebasestorage.app/o/images%2F269683835_789918312407120_1333846745095901890_n.jpg?alt=media&token=809d2292-8315-4607-b1b5-bbe48ee814e2"],
   },

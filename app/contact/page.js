@@ -39,7 +39,7 @@ export default function ContactPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          İletişim
+          Contact
         </motion.h1>
 
         <div className="max-w-4xl mx-auto">
@@ -51,7 +51,7 @@ export default function ContactPage() {
             transition={{ duration: 0.5 }}
           >
             <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">İsim</label>
+              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name</label>
               <input
                 type="text"
                 id="name"
@@ -62,7 +62,7 @@ export default function ContactPage() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">E-posta</label>
+              <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email</label>
               <input
                 type="email"
                 id="email"
@@ -73,7 +73,7 @@ export default function ContactPage() {
               />
             </div>
             <div className="mb-6">
-              <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">Mesaj</label>
+              <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">Message</label>
               <textarea
                 id="message"
                 value={message}
@@ -90,7 +90,7 @@ export default function ContactPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {isSubmitting ? 'Gönderiliyor...' : 'Gönder'}
+                {isSubmitting ? 'Sending...' : 'Send'}
               </motion.button>
             </div>
           </motion.form>
@@ -100,7 +100,7 @@ export default function ContactPage() {
               animate={{ opacity: 1 }}
               className="text-green-600 text-center"
             >
-              Mesajınız başarıyla gönderildi!
+              Your message sent succesfully!
             </motion.p>
           )}
           {submitStatus === 'error' && (
@@ -109,7 +109,7 @@ export default function ContactPage() {
               animate={{ opacity: 1 }}
               className="text-red-600 text-center"
             >
-              Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.
+             Error sending message. Please try again later.
             </motion.p>
           )}
         </div>

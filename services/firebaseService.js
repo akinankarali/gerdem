@@ -47,9 +47,9 @@ export async function fetchComments() {
 export async function addData(collectionName, data) {
   try {
     await addDoc(collection(db, collectionName), data);
-    console.log(`${collectionName} koleksiyonuna başarıyla eklendi.`);
+    console.log(`${collectionName} collection added successfully.`);
   } catch (error) {
-    console.error(`Veri eklenirken hata oluştu: ${error}`);
+    console.error(`Error adding data: ${error}`);
   }
 }
 
@@ -57,18 +57,18 @@ export async function updateData(collectionName, docId, updatedData) {
   try {
     const docRef = doc(db, collectionName, docId);
     await updateDoc(docRef, updatedData);
-    console.log(`${collectionName} koleksiyonundaki belge başarıyla güncellendi.`);
+    console.log(`${collectionName} document in collection successfully updated.`);
   } catch (error) {
-    console.error(`Veri güncellenirken hata oluştu: ${error}`);
+    console.error(`Error updating data: ${error}`);
   }
 }
 
 export async function deleteData(collectionName, docId) {
   try {
     await deleteDoc(doc(db, collectionName, docId));
-    console.log(`${collectionName} koleksiyonundaki belge başarıyla silindi.`);
+    console.log(`${collectionName} document in collection successfully deleted.`);
   } catch (error) {
-    console.error(`Veri silinirken hata oluştu: ${error}`);
+    console.error(`Error deleting data: ${error}`);
   }
 }
 
@@ -92,9 +92,9 @@ export async function updateHomepageData(data, collectionName, docId) {
   try {
     const docRef = doc(db, collectionName, docId);
     await setDoc(docRef, data, { merge: true });
-    console.log("Ana sayfa verisi başarıyla güncellendi.");
+    console.log("Home page data successfully updated.");
   } catch (error) {
-    console.error("Ana sayfa verisi güncellenirken hata oluştu:", error);
+    console.error("Error updating home page data:", error);
     throw error;
   }
 }

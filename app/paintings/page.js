@@ -44,9 +44,9 @@ export default function PaintingsPage() {
 
   return (
     <div className="container mx-auto px-4 py-16">
-      <h1 className="text-4xl font-serif text-center mb-12">Tablolarım</h1>
+      <h1 className="text-4xl font-serif text-center mb-12">My Paintings</h1>
       {paintings.length === 0 ? (
-        <p className="text-center text-gray-600">Henüz tablo bulunmuyor.</p>
+        <p className="text-center text-gray-600">No paintings available yet.</p>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {paintings.map((painting, index) => (

@@ -53,17 +53,17 @@ export default function PaintingsAdmin() {
         story: ''
       })
       
-      alert('Tablo başarıyla eklendi!')
+      alert('Painting added successfully!')
     } catch (error) {
-      console.error('Tablo eklenirken hata oluştu:', error)
-      alert('Tablo eklenirken bir hata oluştu.')
+      console.error('Error adding painting:', error)
+      alert('An error occurred while adding the painting.')
     } finally {
       setIsUploading(false)
     }
   }
 
   const handleDeletePainting = async (paintingId) => {
-    if (!window.confirm('Bu tabloyu silmek istediğinizden emin misiniz?')) {
+    if (!window.confirm('Are you sure you want to delete this painting?')) {
       return
     }
 
@@ -74,10 +74,10 @@ export default function PaintingsAdmin() {
       
       setPaintings(prevPaintings => prevPaintings.filter(painting => painting.id !== paintingId))
       
-      alert('Tablo başarıyla silindi!')
+      alert('Painting successfully deleted!')
     } catch (error) {
-      console.error('Tablo silinirken hata oluştu:', error)
-      alert('Tablo silinirken bir hata oluştu.')
+      console.error('Error deleting painting:', error)
+      alert('An error occurred while deleting the painting.')
     } finally {
       setIsUploading(false)
     }
@@ -91,8 +91,8 @@ export default function PaintingsAdmin() {
       const imageUrl = await uploadPaintingImage(file)
       setNewPainting(prev => ({ ...prev, image: imageUrl }))
     } catch (error) {
-      console.error('Görsel yüklenirken hata oluştu:', error)
-      alert('Görsel yüklenirken bir hata oluştu.')
+      console.error('Error uploading image:', error)
+      alert('An error occurred while uploading the image.')
     } finally {
       setIsUploading(false)
     }
@@ -108,10 +108,10 @@ export default function PaintingsAdmin() {
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-md mb-8">
-      <h2 className="text-2xl font-bold mb-4">Yeni Tablo</h2>
+      <h2 className="text-2xl font-bold mb-4">New Painting</h2>
       <form onSubmit={handleAddPainting} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Başlık</label>
+          <label className="block text-sm font-medium text-gray-700">Title</label>
           <input
             type="text"
             value={newPainting.title}
@@ -122,13 +122,13 @@ export default function PaintingsAdmin() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Görsel</label>
+          <label className="block text-sm font-medium text-gray-700">Image</label>
           <div className="mt-1 flex items-center">
             {newPainting.image && (
               <div className="relative w-32 h-32 mr-4">
                 <Image 
                   src={newPainting.image} 
-                  alt="Yeni tablo görseli" 
+                  alt="New painting image" 
                   layout="fill" 
                   objectFit="cover" 
                   className="rounded"
@@ -147,7 +147,7 @@ export default function PaintingsAdmin() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Fiyat (EUR)</label>
+            <label className="block text-sm font-medium text-gray-700">Price (EUR)</label>
             <input
               type="text"
               value={newPainting.priceEUR}
@@ -157,7 +157,7 @@ export default function PaintingsAdmin() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Fiyat (TRY)</label>
+            <label className="block text-sm font-medium text-gray-700">Price (TRY)</label>
             <input
               type="text"
               value={newPainting.priceTRY}
@@ -169,7 +169,7 @@ export default function PaintingsAdmin() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Açıklama</label>
+          <label className="block text-sm font-medium text-gray-700">Description</label>
           <textarea
             value={newPainting.description}
             onChange={(e) => setNewPainting({ ...newPainting, description: e.target.value })}
@@ -180,7 +180,7 @@ export default function PaintingsAdmin() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Hikaye</label>
+          <label className="block text-sm font-medium text-gray-700">Story</label>
           <textarea
             value={newPainting.story}
             onChange={(e) => setNewPainting({ ...newPainting, story: e.target.value })}
@@ -195,14 +195,14 @@ export default function PaintingsAdmin() {
           disabled={isUploading}
           className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors disabled:opacity-50"
         >
-          {isUploading ? 'Ekleniyor...' : 'Tablo Ekle'}
+          {isUploading ? 'Adding...' : 'Add Painting'}
         </button>
       </form>
 
       <div className="mt-8">
-        <h3 className="text-xl font-bold mb-4">Mevcut Tablolar</h3>
+        <h3 className="text-xl font-bold mb-4">Paintings</h3>
         {paintings.length === 0 ? (
-          <p>Henüz tablo bulunmuyor.</p>
+          <p>There is no painting yet.</p>
         ) : (
           <div className="grid gap-6">
             {paintings.map((painting) => (
@@ -220,10 +220,10 @@ export default function PaintingsAdmin() {
                     </div>
                     <div className="space-y-2">
                       <p className="text-gray-700">
-                        <span className="font-medium">Açıklama:</span> {painting.description}
+                        <span className="font-medium">Description:</span> {painting.description}
                       </p>
                       <p className="text-gray-700">
-                        <span className="font-medium">Hikaye:</span> {painting.story}
+                        <span className="font-medium">Story:</span> {painting.story}
                       </p>
                     </div>
                   </div>
@@ -244,7 +244,7 @@ export default function PaintingsAdmin() {
                     onClick={() => handleDeletePainting(painting.id)}
                     className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
                   >
-                    Sil
+                    Delete
                   </button>
                 </div>
               </div>
@@ -257,7 +257,7 @@ export default function PaintingsAdmin() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-4 rounded-lg flex items-center">
             <Loader2 className="animate-spin mr-2" />
-            <span>Yükleniyor...</span>
+            <span>Loading...</span>
           </div>
         </div>
       )}

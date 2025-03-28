@@ -64,7 +64,7 @@ function BlogContent({ blogPost, comments }) {
       <div className="mb-8">
         <Link href="/blog" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-300">
           <ArrowLeft className="mr-2 h-5 w-5" />
-          Blog&apos;a Dön
+          Back to Blog
         </Link>
       </div>
 
@@ -132,9 +132,9 @@ function BlogContent({ blogPost, comments }) {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="mt-12"
       >
-        <h2 className="text-2xl font-serif mb-4">Yorumlar</h2>
+        <h2 className="text-2xl font-serif mb-4">Comments</h2>
         {comments.filter(comment => comment.isApproved).length === 0 ? (
-          <p className="text-gray-600">Henüz onaylanmış yorum bulunmuyor.</p>
+          <p className="text-gray-600">There is no comments yet.</p>
         ) : (
           <div className="space-y-4 mb-8">
             {comments
@@ -153,7 +153,7 @@ function BlogContent({ blogPost, comments }) {
 
         <form onSubmit={handleSubmit} className="mt-8">
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">İsim</label>
+            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name</label>
             <input
               type="text"
               id="name"
@@ -164,7 +164,7 @@ function BlogContent({ blogPost, comments }) {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">E-posta</label>
+            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email</label>
             <input
               type="email"
               id="email"
@@ -175,7 +175,7 @@ function BlogContent({ blogPost, comments }) {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">Yorum</label>
+            <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">Comment</label>
             <textarea
               id="message"
               value={message}
@@ -192,7 +192,7 @@ function BlogContent({ blogPost, comments }) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isSubmitting ? 'Gönderiliyor...' : 'Yorum Yap'}
+              {isSubmitting ? 'Sending...' : 'Write Comment'}
             </motion.button>
           </div>
         </form>
